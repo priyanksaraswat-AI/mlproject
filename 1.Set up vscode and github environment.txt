@@ -1,0 +1,25 @@
+1.Command to reach project locaiton in Anaconda promt - cd /d "E:\KN-ML\Project"
+
+2.To launch vscode through command promt : (base) E:\KN-ML\Project>code .
+3.Creating environment in vscode : PS E:\KN-ML\Project> conda create -p venv python==3.8 -y
+4.To clean screen : PS E:\KN-ML\Project> cls
+5.our virtual environment exists, but PowerShell is blocking Activate.ps1.---->
+Temporary, only for the current PowerShell session ---->
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+6.To activate env : .\venv\Scripts\Activate.ps1
+7.download git from : https://git-scm.com/install/windows?utm_source=chatgpt.com
+8.Create readme file :(venv) PS E:\KN-ML\Project> echo "# mlproject" >> README.md
+9.Check git version : (venv) PS E:\KN-ML\Project> git --version
+10.Initiate git lidrary : (venv) PS E:\KN-ML\Project> git init
+11.add read me file : (venv) PS E:\KN-ML\Project> git add README.md
+12.initializing user identity(if we are doing it first time - we have to set git global - "https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration"): 
+(venv) PS E:\KN-ML\Project>   git config --global user.email "priyanksaraswat@gmail.com"
+13.initializing user identity :(venv) PS E:\KN-ML\Project>  git config --global user.name "Priyank"  
+14.Committing readme file :(venv) PS E:\KN-ML\Project> git commit -m "First commit"
+15.Synchronizing github : (venv) PS E:\KN-ML\Project> git branch -M main
+16.Synchronizing github :(venv) PS E:\KN-ML\Project> git remote add origin https://github.com/priyanksaraswat-AI/mlproject.git
+17.Synchronizing github - push data to git hub reporsitory :(venv) PS E:\KN-ML\Project> git remote -v
+18.All codes from vscode willl come to github repository
+19.in githud account,under mlproject - create new file in github (.gitignore) - it will remove all files that need not to be stored/commited in github
+20.in githud account,under mlproject -choose github file type (python)
+21.on vscode to update what we have done in github repository :  (venv) PS E:\KN-ML\Project> git pull 

@@ -1,0 +1,22 @@
+1.create file setup.py - it will create ML applications as package and deploying
+refer vscode for inside file
+2.To help setup.py identify how many packages are there ?
+2.1 - create new forlder - src 
+2.2 - create _init_.py file so that this folder get identified
+when find_packages will run in setup.py - it will auto identify folder for package where he will find source "_init_.py  file
+
+all packages like pandas will , all dev will happen in this folder only
+4.Now lets suppose we have 100 lib to be installed - all that we can write it in "install_requries=get_requirements['pandas','numpy','seaborn']"
+
+5.create repository.txt
+
+6.install_requries=get_requirements('requirements.txt')
+7.declare function : def get_requirements(file_path:str) -> List[str] which will return list for that 
+also import list lib from typoing : from typoing import LIst
+refer setup.py file
+8.when we are creating requirements.txt - at that time setup.py file should also run
+To do that happen - we will add "-e ." in requirements.txt  - when compiler ill reach here, it will auto trigger setup.py file
+10.but when we add this "-e ." and we run this function "def get_requirements(file_path:str) -> List[str]" - "-e ." will also come - but it should ideally not come as its just to trigger setup.py and is not an library
+11.update function "def get_requirements(file_path:str) -> List[str]"
+with HYPHEN_E_DoT
+12. pip install -r requirements.txt to install packages : pip install -r requirements.txt
