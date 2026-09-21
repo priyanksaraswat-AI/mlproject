@@ -1,4 +1,4 @@
-1.Command to reach project locaiton in Anaconda promt - cd /d "E:\KN-ML\Project"
+1.Command to reach project locaiton in Anaconda promt - cd E:\KN-ML\Project
 
 2.To launch vscode through command promt : (base) E:\KN-ML\Project>code .
 3.Creating environment in vscode : PS E:\KN-ML\Project> conda create -p venv python==3.8 -y

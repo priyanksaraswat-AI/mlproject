@@ -20,3 +20,10 @@ To do that happen - we will add "-e ." in requirements.txt  - when compiler ill 
 11.update function "def get_requirements(file_path:str) -> List[str]"
 with HYPHEN_E_DoT
 12. pip install -r requirements.txt to install packages : pip install -r requirements.txt
+To commit in GitHub
+13.(venv) PS E:\KN-ML\Project> git add .
+14.(venv) PS E:\KN-ML\Project> git status
+15.(venv) PS E:\KN-ML\Project> git commit -m "Setup"
+16.(venv) PS E:\KN-ML\Project> git push origin main
+
+Result - you get all your codes in GitHub repository

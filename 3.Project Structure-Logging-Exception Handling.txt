@@ -1,0 +1,529 @@
+
+1.Create Component folder will have all codes such as data ingestion etc - we can simply resuse it 
+2.Create component folder -> __init__.py
+3.Create component folder -> data_ingestion.py
+4.Create component folder -> data_transformation.py
+5.Create component folder -> model_trainer.py
+5.Create pipeline folder will have all codes to trigger all codes 
+6.Create pipeline folder -> train_pipeline.py
+7.Create pipeline folder -> predict_pipeline.py
+8.Create pipeline folder ->  __init__.py
+9.Create inside src folder -> logger.py
+10.Create inside src folder -> exception.py
+11.Create inside src folder -> utils.py (we will not create it as of now - we will create when we need it)
+
+12.Writing "exception.py" - what will happen when exception error will be thrown (refer custom exception handling n python documentation)
+
+```python
+import sys
+```
+
+**Purpose:** Imports Python's `sys` module.
+It gives us access to information about the current exception, including the file name and line number where the error occurred.
+
+---
+
+```python
+def error_message_detail(error, error_detail: sys):
+```
+
+**Purpose:** Defines a function that creates a detailed error message.
+
+* `error` → the actual error/exception.
+* `error_detail` → used to access exception information.
+* `: sys` → type annotation, although it isn't necessary here.
+
+---
+
+```python
+    _, _, exc_tb = error_detail.exc_info()
+```
+
+**Purpose:** Gets information about the current exception.
+
+`exc_info()` returns three things:
+
+```text
+type of exception
+exception value
+traceback information
+```
+
+We only need the **traceback**, so `_` is used for the first two values.
+
+`exc_tb` contains information about where the error occurred.
+
+---
+
+```python
+    file_name = exc_tb.tb_frame.f_code.co_filename
+```
+
+**Purpose:** Finds the **name/path of the Python file** where the error occurred.
+
+For example:
+
+```text
+E:\KN-ML\Project\mlproject\data_ingestion.py
+```
+
+---
+
+```python
+    error_message = (
+```
+
+**Purpose:** Starts creating our customized error message.
+
+---
+
+```python
+        "Error occurred in python script name [{0}] "
+```
+
+**Purpose:** Adds the Python file name to the error message.
+
+`{0}` will later be replaced by `file_name`.
+
+---
+
+```python
+        "line number [{1}] "
+```
+
+**Purpose:** Adds the line number where the error occurred.
+
+`{1}` will later be replaced by the actual line number.
+
+---
+
+```python
+        "error message [{2}]"
+```
+
+**Purpose:** Adds the actual error message.
+
+`{2}` will later be replaced by `str(error)`.
+
+Together, these three strings create something like:
+
+```text
+Error occurred in python script name [data_ingestion.py]
+line number [25]
+error message [File not found]
+```
+
+---
+
+```python
+    ).format(
+```
+
+**Purpose:** `.format()` replaces `{0}`, `{1}`, and `{2}` with actual values.
+
+---
+
+```python
+        file_name,
+```
+
+**Purpose:** Replaces `{0}` with the Python file name.
+
+---
+
+```python
+        exc_tb.tb_lineno,
+```
+
+**Purpose:** Replaces `{1}` with the line number where the exception occurred.
+
+---
+
+```python
+        str(error)
+```
+
+**Purpose:** Replaces `{2}` with the actual error converted into text.
+
+---
+
+```python
+    )
+```
+
+**Purpose:** Closes the `.format()` operation.
+
+---
+
+```python
+    return error_message
+```
+
+**Purpose:** Returns the complete customized error message from the function.
+
+---
+
+## CustomException class
+
+```python
+class CustomException(Exception):
+```
+
+**Purpose:** Creates your own custom exception class.
+
+It inherits from Python's built-in `Exception` class.
+
+So instead of simply getting:
+
+```text
+ZeroDivisionError: division by zero
+```
+
+you can get additional information such as:
+
+```text
+File name
+Line number
+Actual error
+```
+
+---
+
+```python
+    def __init__(self, error_message, error_details: sys):
+```
+
+**Purpose:** Defines what happens when `CustomException` is created.
+
+It accepts:
+
+* `error_message` → actual error
+* `error_details` → information about where the error occurred
+
+---
+
+```python
+        super().__init__(error_message)
+```
+
+**Purpose:** Calls the constructor of the parent `Exception` class.
+
+In simple terms:
+
+> "Initialize this custom exception using the original error message."
+
+---
+
+```python
+        self.error_message = error_message_detail(
+```
+
+**Purpose:** Calls our `error_message_detail()` function and stores the resulting detailed message inside the object.
+
+`self.error_message` becomes something like:
+
+```text
+Error occurred in python script name [test.py] line number [10] error message [division by zero]
+```
+
+---
+
+```python
+            error_message,
+```
+
+**Purpose:** Passes the actual error to `error_message_detail()`.
+
+---
+
+```python
+            error_details
+```
+
+**Purpose:** Passes the exception information (`sys`) to the function.
+
+---
+
+```python
+        )
+```
+
+**Purpose:** Closes the function call.
+
+---
+
+```python
+    def __str__(self):
+```
+
+**Purpose:** Defines what should be displayed when the custom exception is converted to a string.
+
+For example, when Python executes:
+
+```python
+print(exception)
+```
+
+this method determines what gets printed.
+
+---
+
+```python
+        return self.error_message
+```
+
+**Purpose:** Returns your customized error message.
+
+So instead of showing only:
+
+```text
+division by zero
+```
+
+you get:
+
+```text
+Error occurred in python script name [test.py] line number [10] error message [division by zero]
+```
+
+if __name__=="__main__":
+
+    try:
+        a=1/0
+    except Exception as e:
+        logging.info("Divide by Zero")
+        raise CustomException(e,sys)
+
+---
+
+## Overall flow
+
+Think of the code like this:
+
+```text
+An error occurs
+      ↓
+CustomException is called
+      ↓
+error_message_detail()
+      ↓
+Find Python file name
+      ↓
+Find line number
+      ↓
+Get original error
+      ↓
+Create detailed message
+      ↓
+Store it in self.error_message
+      ↓
+__str__() returns the detailed message
+```
+
+### Example
+
+Suppose this code:
+
+```python
+try:
+    x = 10 / 0
+except Exception as e:
+    raise CustomException(e, sys)
+```
+
+causes an error.
+
+Instead of only:
+
+```text
+ZeroDivisionError: division by zero
+```
+
+your custom exception can provide:
+
+```text
+Error occurred in python script name [test.py]
+line number [2]
+error message [division by zero]
+```
+
+**In an ML project, the main benefit is debugging:** when a pipeline fails, you immediately know **which file, which line, and what error occurred**.
+
+
+13. Similarly write logger.py (whenever anything gets executed - everything gets executed)
+
+1. Import required libraries
+import logging
+
+Purpose: Imports Python's built-in logging module.
+It allows us to record information such as INFO, WARNING, and ERROR.
+
+import os
+
+Purpose: Provides functions for working with files, folders, and operating-system paths.
+
+We use it to create the logs folder and construct the log-file path.
+
+from datetime import datetime
+
+Purpose: Imports datetime so we can generate the current date and time.
+
+We use it to create a unique log filename.
+
+2. Create the log filename
+LOG_FILE = f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log"
+
+Purpose: Creates a filename based on the current date and time.
+
+For example:
+
+09_21_2026_15_30_45.log
+
+Breaking it down:
+
+datetime.now() → gets current date/time.
+.strftime() → converts date/time into the specified format.
+%m → month
+%d → day
+%Y → year
+%H → hour
+%M → minute
+%S → second
+.log → log-file extension.
+
+The f before the string is an f-string, allowing us to insert the generated date/time into the filename.
+
+3. Create the logs folder path
+logs_path = os.path.join(os.getcwd(), "logs")
+
+Purpose: Creates the path where log files will be stored.
+
+os.getcwd() → gets the current working directory.
+"logs" → specifies a folder named logs.
+os.path.join() → safely combines them.
+
+For example:
+
+E:\KN-ML\Project\logs
+4. Create the logs directory
+os.makedirs(logs_path, exist_ok=True)
+
+Purpose: Creates the logs folder if it doesn't already exist.
+
+exist_ok=True means:
+
+If the folder already exists, don't generate an error.
+
+5. Create the complete log-file path
+LOG_FILE_PATH = os.path.join(logs_path, LOG_FILE)
+
+Purpose: Combines the folder path and filename.
+
+For example:
+
+E:\KN-ML\Project\logs\09_21_2026_15_30_45.log
+6. Configure the logging system
+logging.basicConfig(
+
+Purpose: Configures how Python's logging system should behave.
+
+    filename=LOG_FILE_PATH,
+
+Purpose: Tells Python where to save the log messages.
+
+Instead of displaying logs only in the terminal, they are written to the specified .log file.
+
+    format="[ %(asctime)s ] %(lineno)d %(name)s - %(levelname)s - %(message)s",
+
+Purpose: Defines the format of each log entry.
+
+For example:
+
+[ 2026-09-21 15:30:45,123 ] 25 logger - INFO - Logging has started.
+
+The placeholders mean:
+
+Placeholder	Meaning
+%(asctime)s	Date and time of the log
+%(lineno)d	Line number where logging occurred
+%(name)s	Name of the logger
+%(levelname)s	Log level
+%(message)s	Actual message
+    level=logging.INFO,
+
+Purpose: Sets the minimum logging level to INFO.
+
+Python logging levels generally work like:
+
+DEBUG
+INFO
+WARNING
+ERROR
+CRITICAL
+
+With level=logging.INFO, the logger records:
+
+INFO
+WARNING
+ERROR
+CRITICAL
+
+but normally ignores DEBUG.
+
+)
+
+Purpose: Closes the logging.basicConfig() configuration.
+
+7. Test the logger
+if __name__ == "__main__":
+
+Purpose: Checks whether logger.py is being executed directly.
+
+If you run:
+
+python logger.py
+
+this condition is True.
+
+But if another file imports it:
+
+import logger
+
+the condition is False.
+
+This prevents the test message from running automatically when the module is imported.
+
+    logging.info("Logging has started.")
+
+Purpose: Writes an INFO message to the log file.
+
+You should see something like:
+
+[ 09/21/2026 15:30:45 ] 25 root - INFO - Logging has started.
+Overall flow
+
+The entire code basically does this:
+
+Python program starts
+       ↓
+Get current date/time
+       ↓
+Create logs folder
+       ↓
+Create unique .log filename
+       ↓
+Configure logging
+       ↓
+Application generates log messages
+       ↓
+Messages are stored in logs/*.log
+
+
+14.activate logger.py
+PS E:\KN-ML\Project>  python .\venv\src\logger.py
+PS E:\KN-ML\Project> Get-ChildItem .\logs
+
+logging should start
+
+15.run exception file
+PS E:\KN-ML\Project> python .\src\exception.py   
