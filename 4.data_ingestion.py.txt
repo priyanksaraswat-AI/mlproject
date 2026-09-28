@@ -7,3 +7,7 @@ PS E:\KN-ML\Project> $env:OMP_NUM_THREADS="1"
 PS E:\KN-ML\Project> Get-ChildItem .\src -Recurse  
 PS E:\KN-ML\Project> Get-ChildItem .\src\components   
 PS E:\KN-ML\Project> python -m src.Components.data_ingestion.py
+PS E:\KN-ML\Project> git add .
+PS E:\KN-ML\Project> git commit -m "data ingestion"
+PS E:\KN-ML\Project> git status
+PS E:\KN-ML\Project> git push -u origin main
