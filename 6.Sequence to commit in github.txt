@@ -1,0 +1,5 @@
+git status
+git add .
+git status
+git commit -m "Fix data ingestion and transformation pipeline"
+git push origin main
