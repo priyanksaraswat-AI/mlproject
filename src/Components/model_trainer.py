@@ -22,6 +22,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
+from catboost import CatBoostRegressor
+
 
 from xgboost import XGBRegressor
 
@@ -137,7 +139,7 @@ class ModelTrainer:
             }
             params={
                 "Decision Tree": {
-                    'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                    'criterion':['squared_error', 'absolute_error', 'poisson'],
                     # 'splitter':['best','random'],
                     # 'max_features':['sqrt','log2'],
                 },
@@ -160,12 +162,25 @@ class ModelTrainer:
                     'learning_rate':[.1,.01,.05,.001],
                     'n_estimators': [8,16,32,64,128,256]
                 },
-                "CatBoosting Regressor":{
-                    'depth': [6,8,10],
-                    'learning_rate': [0.01, 0.05, 0.1],
-                    'iterations': [30, 50, 100]
+                  "K-Neighbors": {
+                    "n_neighbors": [3, 5, 7, 9],
+                    "weights": ["uniform", "distance"]
                 },
-                "AdaBoost Regressor":{
+
+
+                "XGBoost": {
+                    "n_estimators": [100, 200],
+                    "learning_rate": [0.05, 0.1],
+                    "max_depth": [3, 5],
+                    "subsample": [0.8, 1.0]
+                },
+
+                "CatBoost": {
+                    "depth": [4, 6, 8],
+                    "learning_rate": [0.03, 0.05, 0.1],
+                    "iterations": [100, 200]
+                },
+                "AdaBoost":{
                     'learning_rate':[.1,.01,0.5,.001],
                     # 'loss':['linear','square','exponential'],
                     'n_estimators': [8,16,32,64,128,256]
